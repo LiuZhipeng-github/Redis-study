@@ -9,10 +9,10 @@ tags:
 - 读书笔记
 mathjax: true
 date: 2020-01-03 11:01:39
-
+参考URL：https://jishuin.proginn.com/p/763bfbd2f0a8
 ---
 
-前一章介绍了Redis的主要数据结构，但Redis并没有直接使用这些数据结构来实现键值对数据库， 而是基于这些数据结构创建了一个对象系统<!--more--> ，**这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象**这五种类型的对象。
+前一章介绍了Redis的主要数据结构，但Redis并没有直接使用这些数据结构来实现键值对数据库， 而是基于这些数据结构创建了一个对象系统 ，**这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象**这五种类型的对象。
 
 使用对象有两个好处：
 
@@ -71,6 +71,10 @@ typedef struct redisObject {
 |   `REDIS_ENCODING_INTSET`   |           整数集合            |
 |  `REDIS_ENCODING_SKIPLIST`  |         跳跃表和字典          |
 
+**每种类型的对象都至少使用了两种不同的编码。**
+
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/image-20201207185749082.png" alt="image-20201207185749082"  />
+
 # 2. 字符串对象
 
 ## 2.1 编码方式
@@ -79,11 +83,11 @@ typedef struct redisObject {
 
 （1）如果一个字符串对象保存的是**整数值**， 并且这个整数值可以用 `long` 类型来表示， 那么字符串对象会**将整数值保存在字符串对象结构的 `ptr`属性里面**（将 `void*` 转换成 `long` ）， 并将字符串对象的编码设置为 `int` 。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103112739.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103112739.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 （2）如果字符串对象保存的是一个字符串值， 并且这个字符串值的长度**大于** `39` 字节， 那么字符串对象将**使用一个简单动态字符串（SDS）来保存这个字符串值**， 并将对象的编码设置为 `raw` 。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103112837.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103112837.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 （3）如果字符串对象保存的是一个字符串值， 并且这个字符串值的长度**小于等于** `39` 字节， 那么字符串对象将使用 `embstr` 编码的方式来保存这个字符串值。
 
@@ -92,11 +96,11 @@ typedef struct redisObject {
 - `raw` 编码会**调用两次内存分配**函数来**分别**创建 `redisObject` 结构和 `sdshdr` 结构。
 - `embstr` 编码则通过**调用一次**内存分配函数来分配一块**连续的空间**。这个空间依次包括redisObject和sdshdr两个结构。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103113250.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103113250.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 
 
-**这里在加张图！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！**
+![529C97CF-B00E-434F-A1EB-17CED642C1E6_1_201_a](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/529C97CF-B00E-434F-A1EB-17CED642C1E6_1_201_a.jpeg)
 
 
 
@@ -148,7 +152,7 @@ redis> OBJECT ENCODING msg
 "raw"
 ```
 ## 2.3 字符串命令的实现
-**加图！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！**
+![2389B0AD-78CA-4830-BF94-ABFC37A49C62_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/2389B0AD-78CA-4830-BF94-ABFC37A49C62_1_105_c.jpeg)
 
 # 3. 列表对象
 
@@ -163,17 +167,17 @@ redis> RPUSH numbers 1 "three" 5
 (integer) 3
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103132547.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103132547.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
 如果使用的不是 `ziplist` 编码， 而是 `linkedlist`双端链表 编码， 那么 
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103132714.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103132714.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
-这其实是一个**嵌套编码**，Redis使用了一个带有 `StringObject` 来表示一个字符串对象，编码方式如同上面提到的那三种。**如果编码对象时字符串值**，展开后就是：
+这其实是一个**嵌套编码**（**重要**），Redis使用了一个带有 `StringObject` 来表示一个字符串对象，编码方式如同上面提到的那三种。**如果编码对象时字符串值**，展开后就是：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103132918.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103132918.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 3.2 编码转换
 
@@ -185,7 +189,7 @@ redis> RPUSH numbers 1 "three" 5
 当上述条件任意一个不满足时，就会执行**转换操作**： 原本保存在压缩列表里的所有列表元素都会被转移并保存到双端链表里面， 对象的编码也会从 `ziplist` 变为 `linkedlist` 。
 ## 3.3 列表对象命令的实现
 
-**加图!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+![AC704041-2DE4-403F-952F-639790231737_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/AC704041-2DE4-403F-952F-639790231737_1_105_c.jpeg)
 
 
 # 4. 哈希对象
@@ -212,7 +216,7 @@ redis> HSET profile career "Programmer"
 (integer) 1
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103133909.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103133909.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -223,7 +227,9 @@ redis> HSET profile career "Programmer"
 
 比如，上面的例子改为`hashtable` 编码
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103134109.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103134109.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+
+![image-20201207185331187](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/image-20201207185331187.png)
 
 ## 4.2 编码转换
 
@@ -235,7 +241,7 @@ redis> HSET profile career "Programmer"
 和列表对象一样，不满足条件时原本保存在压缩列表里的所有键值对都会被转移并保存到字典里面， 对象的编码也会从 `ziplist` 变为 `hashtable` 。
 ## 4.3 哈希命令的实现
 
-**加图！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！**
+![5DFBACDD-0065-4AEE-AED5-8EF5029F1EDD_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/5DFBACDD-0065-4AEE-AED5-8EF5029F1EDD_1_105_c.jpeg)
 
 
 
@@ -254,13 +260,13 @@ redis> SADD numbers 1 3 5
 (integer) 3
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103134827.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103134827.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
 另一方面， `hashtable` 编码的集合对象使用字典作为底层实现， 字典的**每个键都是一个字符串对象**， 每个字符串对象包含了一个集合元素， 而**字典的值则全部被设置为 `NULL` 。**
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103134945.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103134945.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 5.2 编码的转换
 
@@ -273,7 +279,7 @@ redis> SADD numbers 1 3 5
 ## 5.3 集合对象的命令实现
 
 
-**加图！！！！！！！！！！！！！！！！！！！！！！！！！！！！！**
+![419308DC-7BB9-4382-B655-9637D4128E0B_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/419308DC-7BB9-4382-B655-9637D4128E0B_1_105_c.jpeg)
 
 
 # 6. 有序集合对象
@@ -289,7 +295,7 @@ redis> ZADD price 8.5 apple 5.0 banana 6.0 cherry
 (integer) 3
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103135248.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103135248.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -304,9 +310,11 @@ typedef struct zset {
 
 起作用主要是跳跃表，字典是辅助加速用。**字典的键记录了元素的成员，而值则保存了元素的分值**。通过字典，能实现$O(1)$复杂度的查找给定成员分值。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103140005.png"  style="zoom:80%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/20200103140005.png"  style="zoom:80%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
+
+![image-20201207185430699](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/image-20201207185430699.png)
 
 有序集合**每个元素的成员都是一个字符串对象**， 而每个元素的**分值都是一个 `double` 类型的浮点数**。
 
@@ -327,13 +335,13 @@ typedef struct zset {
 ## 6.3 有序集合命令的实现方法
 
 
-图
+![9BBF0EDE-3EC2-4E17-A3F1-9A4451D2A9F3_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/9BBF0EDE-3EC2-4E17-A3F1-9A4451D2A9F3_1_105_c.jpeg)
 
 ## 6.4 类型检查与命令多态
 
 Redis中用于操作键的命令基本分为两类。其中一种命令可以对任何一种类型的键执行（DEL、RENAME等），而另一种命令是对特定类型的键执行。所以Redis会先检查输入键的类型是否正确，然后再决定是否执行给定的命令。Redis除了根据值对象的类型来判断键是否能够执行指定指令外，还会根据值对象的编码方式，选择正确的命令实现代码来执行命令。比如列对象的两种编码实现方式（ziplist，linkedlist）
 
-**加图8-19!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+![01827C32-2921-4625-8A92-91DB7C3D448C_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B02-%E5%AF%B9%E8%B1%A1.assets/01827C32-2921-4625-8A92-91DB7C3D448C_1_105_c.jpeg)
 
 # 7. 内存回收、对象共享和空转时长
 
@@ -367,8 +375,7 @@ typedef struct redisObject {
 
  假设键 A 创建了一个包含整数值 `100` 的字符串对象作为值对象，
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200103141637.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
-**（换掉上面的图！！！！！！！！！！！！！！！！！！！！！！！！！！）**
+![9CB64972-315F-4E98-84FA-1719B0E930E9_1_105_c](../../../../../Pictures/Photos%20Library.photoslibrary/resources/derivatives/9/9CB64972-315F-4E98-84FA-1719B0E930E9_1_105_c.jpeg)
 如果这时键 B 也要创建一个同样保存了整数值 `100` 的字符串对象作为值对象， 那么服务器有以下两种做法：
 
 1. 为键 B 新创建一个包含整数值 `100` 的字符串对象；
@@ -390,7 +397,10 @@ typedef struct redisObject {
 |       保存整数值字符串对象       | $O( 1)$  |
 |     保存字符串值的字符串对象     |  $O(N)$  |
 | 包含了多个值的对象（列表或哈希） | $O(N^2)$ |
-尽管共享更复杂的对象可以节约更多的内存，但受到CPU时间的限制，Redis只对包含整数值的字符串进行共享。
+
+
+**尽管共享更复杂的对象可以节约更多的内存，但受到CPU时间的限制，Redis只对包含整数值的字符串进行共享。**
+
 ---
 
 `redisObject` 结构包含的最后一个属性为 `lru` 属性， 该属性记录了对象最后一次被命令程序访问的时间：

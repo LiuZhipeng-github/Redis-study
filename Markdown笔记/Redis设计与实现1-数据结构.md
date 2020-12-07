@@ -54,7 +54,7 @@ struct sdshdr {
 
 下面给出了一个示例，free为0代表所有空间都被使用，len长度为5，表示SDS保存的字符串长度为5，buf就是字符串实体。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102110541.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102110541.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 保存空字符的1字节空间**不计算在len属性内**。遵循空字符结尾这一惯例的好处是， **SDS 可以直接重用一部分 C 字符串函数库里面的函数。**
 
@@ -91,7 +91,7 @@ C字符串以空字符`\0`结尾，使得 C 字符串只能保存文本数据，
 
 SDS利用len来判断是否结束，而不是空字符`\0`
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102113458.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102113458.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 2. 链表
 
@@ -112,7 +112,7 @@ typedef struct listNode {
 
 这是一个**双端链表**。
 
-![](https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102124804.png)
+![](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102124804.png)
 
 虽然可以多个Node组成链表，但是为了方便，Redis设计了`adlist.h/list` 来持有链表。
 
@@ -165,7 +165,7 @@ typedef struct dictht {
 
 `table` 是一个数组， 数组中的每个元素都是一个指向 `dict.h/dictEntry` 结构的指针。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102125720.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102125720.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **哈希表节点**使用 `dictEntry` 结构表示， 每个 `dictEntry` 结构都保存着一个键值对：
 
@@ -190,7 +190,7 @@ typedef struct dictEntry {
 
 下图中，键的索引值都是2，通过链表的形式完成了冲突的规避。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102130802.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102130802.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -238,7 +238,7 @@ typedef struct dictType {
 
 下图展示了一个普通状态下（没有rehash）的字典
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102132429.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102132429.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 3.2 哈希算法
 
@@ -257,7 +257,7 @@ index = hash & dict->ht[x].sizemask;
 
 举个例子，假如想要将键值对`k0` 和 `v0` 添加到下面的字典中。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102133053.png" style="zoom:50%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102133053.png" style="zoom:50%;display: block; margin: 0px auto; vertical-align: middle;">
 
 假设计算出的hash值是8，则index为
 
@@ -265,7 +265,7 @@ index = hash & dict->ht[x].sizemask;
 index = hash & dict->ht[0].sizemask = 8 & 3 = 0;
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102133229.png" style="zoom:62%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102133229.png" style="zoom:62%;display: block; margin: 0px auto; vertical-align: middle;">
 
 至于Redis的哈希值计算方法，使用的是 MurmurHash2。这种算法的优点在于， 即使输入的键是有规律的， 算法仍能给出一个很好的随机分布性， 并且算法的计算速度也非常快。
 
@@ -305,23 +305,23 @@ load_factor = ht[0].used / ht[0].size
 
 我们知道链表随机读写的能力很差，当增删改查的时候，如果要找到目标元素就需要遍历链表。假设某个数据结构是有序的，我们就会想到用二分法来快速查找，但**链表是没有索引的**，所以我们需要添加。
 
-![](https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102142228.png)
+![](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102142228.png)
 
 可以继续向上拓展层数：
 
-![](https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102142348.png)
+![](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102142348.png)
 
 但是我们的链表不是静态的，增加和删除会破坏二分结构，所以我们就不强制要求 `1:2` 了，一个节点要不要被索引，建几层的索引，都在节点插入时由**随机决定**。
 
 现在假设节点 `17` 是最后插入的，在插入之前，我们需要搜索得到插入的位置：
 
-![](https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102142612.png)
+![](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102142612.png)
 
 ## 4.2 跳跃表的实现
 
 Redis 的跳跃表由 `redis.h/zskiplistNode` 和 `redis.h/zskiplist` 两个结构定义， 其中 `zskiplistNode` 结构用于表示跳跃表**节点**， 而 `zskiplist`结构则用于保存跳跃表节点的相关信息， 比如**节点的数量， 以及指向表头节点和表尾节点的指针**， 等等。
 
-![](https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102142837.png)
+![](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102142837.png)
 
 在`zskiplist`中`level` 记录目前跳跃表内最大层数（表头不算），`length`记录包含的节点数量（表头不算）。
 
@@ -358,7 +358,7 @@ typedef struct zskiplistNode {
 
 下图展示了三个高度为 `1` 层、 `3` 层和 `5` 层的节点
 
-![](https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102143732.png)
+![](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102143732.png)
 
 **（2）前进指针**
 
@@ -372,7 +372,7 @@ typedef struct zskiplistNode {
 
 下图的例子中，查找分值为3.0的节点，由于只经过了一个层，跨度为3，所以跳跃表中的排位为3。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102144352.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102144352.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -420,7 +420,7 @@ typedef struct intset {
 
 下图展示了一个示例：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102150529.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102150529.png" style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 5.2 升级
 
@@ -434,11 +434,11 @@ typedef struct intset {
 
 假设想要在16位编码的intset中插入32位的65535数据，原来的集合是这样的：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102151704.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102151704.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 需要扩容为$32\times4=**128**$位，新intset结构会扩容成这样：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102151747.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102151747.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 剩下就需要对元素重排。
 
@@ -460,7 +460,7 @@ typedef struct intset {
 
 压缩列表是 Redis 为了节约内存而开发的， 由一系列特殊编码的**连续内存块组成的顺序型（sequential）数据结构。**
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102154549.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102154549.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 |  属性   |   类型   | 长度  |                  作用                  |
 | :-----: | :------: | :---: | :------------------------------------: |
@@ -472,7 +472,7 @@ typedef struct intset {
 
 下面展示了一个例子：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102155025.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102155025.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 - `zlbytes` 属性的值为 `0x50` （十进制 `80`）， 表示压缩列表的总长为 `80` 字节。
 - `zltail` 属性的值为 `0x3c` （十进制 `60`），如果一个指向压缩列表起始地址的指针 `p` ， 那么只要用指针 `p` 加上偏移量 `60` ， 就可以计算出表尾节点 `entry3` 的地址。
@@ -503,7 +503,7 @@ typedef struct intset {
 
 以字节为单位， 记录了压缩列表中**前一个节点的长度。**这个属性的长度可以是1字节或5字节，如果前一个小于254则使用1字节，反之使用5字节（ 其中属性的**第一字节会被设置为 `0xFE`（十进制值 `254`）**， 而之后的四个字节则用于保存前一节点的长度）
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102155739.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102155739.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 程序可以通过指针运算， 根据当前节点的起始地址来**计算出前一个节点的起始地址**。进而可以回溯到表头。
 
@@ -515,15 +515,15 @@ typedef struct intset {
 
 保存每个元素是1个字节的数组，长度11。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102161121.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102161121.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 如果是整数类型，则开头必是11，然后从第6位开始往低位开始计数：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102161401.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102161401.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 每个元素`int16_t`，值为10086
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102161414.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102161414.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 6.3 连锁更新
 
@@ -534,7 +534,7 @@ typedef struct intset {
 
 假设现在有一些长度为252字节的节点，他们在`previous_entry_length`中保存为1字节。现在插入了一个260字节的新节点，`new` 将成为 `e1` 的前置节点。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200102162612.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.assets/20200102162612.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 因为 `e1` 的 `previous_entry_length` 属性仅长 `1` 字节， 它没办法保存新节点 `new` 的长度， 所以程序将对压缩列表执行空间重分配操作， **并将`e1` 节点的 `previous_entry_length` 属性从原来的 `1` 字节长扩展为 `5` 字节长。**
 

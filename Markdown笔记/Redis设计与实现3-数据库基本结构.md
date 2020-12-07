@@ -11,7 +11,7 @@ mathjax: true
 date: 2020-01-04 09:59:28
 ---
 
-本章将对Redis服务器的数据库实现进行介绍，介绍键空间、过期键，数据库通知的实现方法。<!--more-->
+本章将对Redis服务器的数据库实现进行介绍，介绍键空间、过期键，数据库通知的实现方法。
 
 # 1. 数据库的切换
 
@@ -29,7 +29,7 @@ struct redisServer
 
 初始化时，程序会根据当前服务器的`dbnum`属性来**决定建立数据库的个数**，默认创建16个。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200104100601.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B03-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.assets/20200104100601.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -65,7 +65,7 @@ typedef struct redisClient
 
 如果某个**客户端的目标数据库**为1号数据库，那么这个客户端所对应的客户端状态和**服务器状态**之间的关系如图：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200104103307.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B03-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.assets/20200104103307.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 通过修改指针，使他指向服务器中不同的数据库，从而达到切换的目的。
 
@@ -107,9 +107,9 @@ redis> HSET book publisher "Manning"
 
 数据库的键空间结构如下：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200104105103.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B03-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.assets/20200104105103.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-## 2.2 键空间的增删改查(每个后面加一张图)
+## 2.2 键空间的增删改查
 
 **（1）添加和修改键**
 
@@ -122,6 +122,8 @@ redis> HSET book publisher "Manning"
 |  列表对象  | **LSET**  cloth   0 shirt<br />**LPUSH**  food  potato <br />**RPUSH**  brand  apple<br />**LRANGE**  level  0 5 |
 |  集合对象  | **SADD**  occupation  firefighter                            |
 |  有序集合  | **ZADD**  grade  87 Tom  65 Terry<br />                      |
+
+![CE1053BD-CA83-4CE3-8B85-56A0C5E2AFD8_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B03-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.assets/CE1053BD-CA83-4CE3-8B85-56A0C5E2AFD8_1_105_c.jpeg)
 
 **（2）删除键**
 
@@ -137,6 +139,8 @@ POP在删除的同时，会返回结果，打印到控制台，而REM则是单�
 
 有序集合范围删除中，LEX表示键， [ ( 表示区间开闭。而`ZREMRANGEBYRANK salary 0 2`表示删除salary最高的三个。
 
+![90E776F6-CC9D-4893-9FBC-AB636ACDB5DF_1_201_a](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B03-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.assets/90E776F6-CC9D-4893-9FBC-AB636ACDB5DF_1_201_a.jpeg)
+
 **（3）查询键**
 
 |    对象    | 命令                                                         |
@@ -148,6 +152,8 @@ POP在删除的同时，会返回结果，打印到控制台，而REM则是单�
 |  有序集合  | ...                                                          |
 
 HGET是根据键返回值，HGETALL则返回所有键值对，HKEYS返回所有键。列表对象根据主要根据下标返回结果。
+
+![9E9476B9-09E4-477D-AB89-D67BD63E37E0_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B03-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.assets/9E9476B9-09E4-477D-AB89-D67BD63E37E0_1_105_c.jpeg)
 
 # 3. 过期键
 
@@ -174,7 +180,7 @@ redis> GET key // 5秒之后
 
 所有的命令在Redis中**最终都会转化为PEXPIREAT**执行。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200104125252.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B03-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.assets/20200104125252.png"  style="zoom: 150%; display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -191,7 +197,7 @@ typedef struct redisDb
 
 虽然键空间和过期时间都有相同的键，但他们以指针形式指向同一个键，不会造成空间浪费。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200104130057.png"  style="zoom:72%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B03-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.assets/20200104130057.png"  style="zoom:72%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 3.2 过期键的删除策略
 

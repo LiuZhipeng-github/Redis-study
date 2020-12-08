@@ -33,7 +33,7 @@ struct redisServer
 };
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200106102025.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200106102025.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 1.1 客户端属性
 
@@ -105,7 +105,7 @@ typedef struct redisClient
 *3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200106105831.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200106105831.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（5）命令与命令参数**
 
@@ -123,7 +123,7 @@ typedef struct redisClient
 
 argv属性是一个数组，**数组中的每个项都是一个字符串对象**，其中`argv[0]`是**要执行的命令**，而之后的其他项则是**传给命令的参数**。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200106110223.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200106110223.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（6）命令的实现函数**
 
@@ -137,7 +137,7 @@ argv属性是一个数组，**数组中的每个项都是一个字符串对象**
 - 命令的总执行次数
 - 总消耗时长
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200106110844.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200106110844.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 当程序在命令表中成功找到argv[0]所对应的redisCommand结构时，**客户端状态的cmd指针指向这个结构**：
 
@@ -152,7 +152,7 @@ typedef struct redisClient
 
 服务器就可以使用cmd属性所指向的redisCommand结构，以及argv、argc属性中保存的命令参数信息，调用命令实现函数，执行客户端指定的命令。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200106114222.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200106114222.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（7）输出缓冲区**
 
@@ -208,7 +208,7 @@ typedef struct redisClient
 
 之后，会将新客户端的状态添加到clients链表的末尾。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107101305.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200107101305.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 关闭的原因可能有很多种
 
@@ -255,7 +255,7 @@ Lua脚本会一直存在于服务器生命周期，只有服务器被关闭时�
 
 用户在客户端键入一个请求时，客户端会**将命令请求转换为协议格式**，然后通过套接字发送给服务器。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107103344.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200107103344.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（2）读取命令请求**
 
@@ -272,19 +272,19 @@ Lua脚本会一直存在于服务器生命周期，只有服务器被关闭时�
 
 字典的键是一个命令的字符串格式，值则是一个redisCommand结构：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107103728.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200107103728.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 下表展示了slags属性可以使用的标识和意义：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107103852.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200107103852.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 比如set和get执行时，就会：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107104058.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200107104058.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 在命令表中查找到对应命令后，设置客户端状态的cmd指针。
 
-加图14-5！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+![C7F06F3F-F786-4B58-AD19-2B200DF481DA_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/C7F06F3F-F786-4B58-AD19-2B200DF481DA_1_105_c.jpeg)
 
 ---
 
@@ -310,9 +310,9 @@ Lua脚本会一直存在于服务器生命周期，只有服务器被关闭时�
 client->cmd->proc(client);
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107105613.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200107105613.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107105749.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200107105749.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 - 执行后续工作
 
@@ -343,7 +343,7 @@ struct redisServer
 
 LRU是Least Recent Used，原理如下：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107110155.png"  style="zoom:65%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200107110155.png"  style="zoom:65%;display: block; margin: 0px auto; vertical-align: middle;">
 
 服务器状态中的lruclock属性保存了服务器的LRU时钟，这个属性和上面介绍的unixtime属性、mstime属性一样，都是**服务器时间缓存的一种**。
 
@@ -418,7 +418,7 @@ serverCron函数每次执行都会调用databasesCron函数，这个函数会对
 
 每次serverCron函数执行时，函数都会检查BGSAVE命令或者BGREWRITEAOF命令是否正在执行，如果这两个命令都没在执行，且有被延迟的BGREWRITEAOF，则执行。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107113952.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/20200107113952.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（9）将AOF缓冲区内容写入AOF文件**
 

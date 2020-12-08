@@ -12,7 +12,7 @@ date: 2020-01-06 11:03:18
 
 ---
 
-本章将介绍2.8以前的老版复制功能和2.8以后的新版复制功能，讲解机制和优劣势。<!--more-->
+本章将介绍2.8以前的老版复制功能和2.8以后的新版复制功能，讲解机制和优劣势。
 
 在Redis中，用户可以通过执行SLAVEOF命令或者设置slaveof选项，让一个服务器去复制另一个服务器，我们称呼被复制的服务器为**主服务器（master）**，而对主服务器进行复制的服务器则被称为**从服务器（slave）**。搞清楚关系，如果服务器A输入指令SLAVEOF，则A变成B的从服务器。
 
@@ -50,13 +50,13 @@ Redis的复制功能分为**同步（sync）**和**命令传播（commandpropaga
 
 > BGSAVE命令会**增加一个子进程**，负责创建RDB文件。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110102512.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110102512.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（2）命令传播**
 
 主服务器会将自己执行的**写命令**，也即是造成主从服务器不一致的那条写命令，发送给从服务器执行，当从服务器执行了相同的写命令之后，主从服务器将再次回到一致状态。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110103530.png"/>
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110103530.png"/>
 
 ## 1.2 旧版复制的缺陷
 
@@ -93,9 +93,9 @@ PSYNC命令具有**完整重同步（full resynchronization）**和**部分重�
 - 主服务器每次向从服务器传播N个字节的数据时，就将自己的复制偏移量的值加上N。
 - 从服务器每次收到主服务器传播来的N个字节的数据时，就将自己的复制偏移量的值加上N。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110105444.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110105444.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110105508.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110105508.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **通过对比主从服务器的复制偏移量，程序可以很容易地知道主从服务器是否处于一致状态**：
 
@@ -106,11 +106,11 @@ PSYNC命令具有**完整重同步（full resynchronization）**和**部分重�
 
 复制积压缓冲区是由主服务器维护的一个**固定长度**（fixed-size）先进先出（FIFO）队列，默认大小为1MB。当主服务器进行命令传播时，它不仅会将写命令发送给所有从服务器，还会**将写命令入队到复制积压缓冲区里面**。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110105707.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110105707.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 与此同时，主服务器也会向积压缓冲区添加偏移量，
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110105829.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110105829.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 当服务器重新连接上主服务器时，从服务器会通过PSYNC命令将自己的复制偏移量offset发送给主服务器，**主服务器会根据这个复制偏移量来决定对从服务器执行何种同步操作**：
 
@@ -148,7 +148,7 @@ PSYNC命令的调用方法有两种：
 
 **（3）**如果主服务器返回-ERR回复，那么表示主服务器的版本低于Redis2.8，它识别不了PSYNC命令，从服务器将向主服务器发送SYNC命令，并与主服务器执行完整同步操作。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110111652.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110111652.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 2.3 新版复制的完整流程
 
@@ -174,13 +174,13 @@ struct redisServer{
 };
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110112744.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110112744.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（2）步骤二：建立套接字连接**
 
 **从服务器**将根据命令所设置的IP地址和端口，创建**连向主服务器的**套接字连接
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110112909.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110112909.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 此时，**从服务器变为了主服务器的客户端。**从服务器**同时具备**服务器和客户端的两个身份。
 
@@ -197,13 +197,13 @@ struct redisServer{
 - 主服务器**返回一个错误**，表示主服务器暂时无法处理请求（比如正在处理一个超时运行脚本），从服务器**断开并重新创建**连向主服务器的套接字。
 - 从服务器收到PONG回复，表示主从之间连接正常。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110114257.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110114257.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（4）步骤四：身份验证**
 
 收到pong的回复后，下一步是确定是否进行身份验证：如果从服务器设置了masterauth选项，那么进行身份验证；反之则不进行。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110114522.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B07-%E5%A4%8D%E5%88%B6.assets/20200110114522.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（5）步骤五：发送端口信息**
 

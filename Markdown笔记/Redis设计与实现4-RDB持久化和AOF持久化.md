@@ -17,13 +17,13 @@ date: 2020-01-04 14:10:19
 
 将服务器中的非空数据库以及它们的键值对统称为**数据库状态**。下图三个非空数据库，以及其中的键值对就是该服务器的数据库状态。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200104142148.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200104142148.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 在Redis中，只有将数据保存在内存磁盘里才会永久保存，**如果服务器进程退出，服务器中的数据库状态就会消失。**为了解决这个问题，Redis提供了RDB持久化功能，这个功能可以将Redis在内存中的数据库状态保存到磁盘里面。
 
 RDB持久化产生的RDB文件(Redis Database)是一个**经过压缩的二进制文件，该文件可以被还原为数据库状态**，所以即使服务器停机，服务器的数据还是被安全保存在硬盘中。RDB既可以手动执行，也可以根据服务器配置选项定期执行，该功能可以可以将某个时间点上的数据状态保存到一个人RDB文件中。
 
-加图10-2 10-3！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+![8278EB98-F229-45F3-8FD1-3F6BB6E7A2B3_4_5005_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/8278EB98-F229-45F3-8FD1-3F6BB6E7A2B3_4_5005_c.jpeg)
 
 
 ## 1.1 RDB文件的创建与载入
@@ -50,7 +50,7 @@ BGSAVE执行时，会阻止SAVE、其他BGSAVE和BGREWRITEAOF这三个命令执�
 
 Redis并没有载入RDB文件的命令，只要服务器启动时**检测到RDB文件存在，他就会自动载入。**,服务器在载入RDB文件期间，会一直处于阻塞状态，直到载入工组完成为止。比如下面日志的第二条：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200104154834.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200104154834.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 1.2 自动间隔性保存
 
@@ -88,7 +88,7 @@ struct saveparam
 };
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200104161007.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200104161007-20201208183809040.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -113,7 +113,7 @@ Redis的服务器**周期性操作函数serverCron默认每隔100毫秒就会执
 
 完整的RDB文件如下，
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200104162540.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200104162540.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 RDB是一个二进制文件而不是文本文件。
 
@@ -129,23 +129,23 @@ RDB是一个二进制文件而不是文本文件。
 
 每个非空数据库在RDB文件中都可以保存为`SELECTDB`、`db_number`、`key_value_pairs`三个部分，如图所示。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105101246.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105101246.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 - `SELECTDB`，1字节，当读取到此值时，程序知道接下来要读入一个数据库号码。
 - `db_number`，1、2、5字节，保存数据库号码。
 - `key_value_pairs`，保存键值对，包括过期时间。
 
-加图10-15、10-14！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+![5FF76074-70C2-42BA-885B-6ADB6B2251CA_4_5005_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/5FF76074-70C2-42BA-885B-6ADB6B2251CA_4_5005_c.jpeg)
 
 ### 1.3.2 key_value_pairs部分
 
 不带过期时间的键值对在RDB文件中由TYPE、key、value三部分组成，
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105101548.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105101548.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 带有过期时间的键值对在RDB中的结构如下
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105101713.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105101713.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 - EPIRETIME_MS，1字节，告诉程序接下来读取一个以毫秒为单位的过期时间。
 - ms，8字节带符号整数，记录一个以毫秒为单位的UNIX时间戳。
@@ -158,17 +158,17 @@ RDB是一个二进制文件而不是文本文件。
 
 如果是INT，则表示对象是一个**长度不超过32位的整数**，保存方式如下：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105103613.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105103613.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 其中，`ENCODING`的值可以是`REDIS_RDB_ENC_INT8`、`REDIS_RDB_ENC_INT16`或者`REDIS_RDB_ENC_INT32`三个常量的其中一个，它们分别代表RDB文件使用8位、16位或者32位来保存整数值integer。
 
 如果是RAW格式，则说明对象是一个**字符串值**，有压缩和不压缩两种方法来保存。对于没有压缩的字符串，保存格式如下：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105103834.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105103834.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 压缩后的字符串，保存格式如下：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105103859.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105103859.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 - REDIS_RDB_ENC_LZF，表明已被LZF算法压缩
 - compressed_len，被压缩后的字符串长度
@@ -179,11 +179,11 @@ RDB是一个二进制文件而不是文本文件。
 
 如果TYPE的值为`REDIS_RDB_TYPE_LIST`，那么value保存的就是一个`REDIS_ENCODING_LINKEDLIST`编码的列表对象，RDB文件保存这种对象的结构如图所示。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105104226.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105104226.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **每一个列表项都是一个字符串对象**，所以程序会以字符串对象的方式来保存。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105104419.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105104419.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 结构中，3表示列表长度，5表示第一个列表项长度为5，内容为"hello"。
 
@@ -191,11 +191,11 @@ RDB是一个二进制文件而不是文本文件。
 
 如果TYPE的值为`REDIS_RDB_TYPE_SET`，那么value保存的就是一个`REDIS_ENCODING_HT`编码的集合对象，RDB文件保存这种对象的结构如图所示。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105104627.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105104627.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 图中elem代表集合的元素，**每个集合元素都是一个字符串对象。**
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105104715.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105104715.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 和列表一样，4代表集合大小，5代表元素长度，值为"apple"。
 
@@ -203,11 +203,11 @@ RDB是一个二进制文件而不是文本文件。
 
 如果TYPE的值为`REDIS_RDB_TYPE_HASH`，那么value保存的就是一个`REDIS_ENCODING_HT`编码的集合对象，RDB文件保存这种对象的结构如图所示。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105105142.png"  style="zoom:77%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105105142.png"  style="zoom:77%;display: block; margin: 0px auto; vertical-align: middle;">
 
 例子如下，
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105105208.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105105208.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 哈希表长度为2，第一个键值对，键长度为1的字符串"a"，值为5的字符串"apple"。
 
@@ -215,11 +215,11 @@ RDB是一个二进制文件而不是文本文件。
 
 如果TYPE的值为`REDIS_RDB_TYPE_ZSET`，那么value保存的就是一个`REDIS_ENCODING_SKIPLIST`编码的有序集合对象，RDB文件保存这种对象的结构如图所示。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105105658.png" style="zoom:77%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105105658.png" style="zoom:77%;display: block; margin: 0px auto; vertical-align: middle;">
 
 比如：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105105726.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105105726.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 大小为2，第一个元素是长度为2的字符串"pi"，分值被转换为长度为4的字符串"3.14"。
 
@@ -235,7 +235,7 @@ RDB是一个二进制文件而不是文本文件。
 
 RDB持久化记录的是数据库本身，而AOF(Append Only File)则**记录Redis服务器所执行的写命令**。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105111552.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105111552.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 假如使用如下命令:
 
@@ -280,11 +280,11 @@ Redis的服务器进程就是一个**事件循环（loop）**，这个循环中�
 
 服务器每次结束一个事件循环之前，它都会调用`flushAppendOnlyFile`函数，**考虑是否需要将`aof_buf`缓冲区中的内容写入和保存到AOF文件里面**。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105120013.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/20200105120013.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 这个函数的行为有服务器配置的`appendfsync`选项来设置，默认为`everysec`：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105120224.png"  style="zoom:80%;display: block; margin: 0px auto; vertical-align: middle;">
+style="zoom:80%;display: block; margin: 0px auto; vertical-align: middle;">
 
 默认情况下，距离上次同步过了一秒钟，则服务器会将aof_buf内容写入AOF文件中。文件的写入：写到操作系统的缓冲区。文件的同步：真正写入AOF文件。
 
@@ -332,5 +332,5 @@ AOF还原数据库的步骤如下：
 
 在执行BGREWITEAOF命令时，Redis服务器会维护一个AOF重写缓冲区，该缓冲区会在子进程创建AOF文件期间，记录服务器执行的所有写命令。当子进程完成创建AOF文件之后，服务器会将重写缓冲区中的所有内容追加到新的AOF文件的末尾，使得新旧两文件所保存的数据库状态一致。最后，服务器用新的AOf文件替换旧的AOF文件，以此来完成AOF文件的重写操作。
 
-加表11-3！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+![1475501D-7E24-400B-B6B1-CCA8316F1EA3_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B04-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8CAOF%E6%8C%81%E4%B9%85%E5%8C%96.assets/1475501D-7E24-400B-B6B1-CCA8316F1EA3_1_105_c.jpeg)
 

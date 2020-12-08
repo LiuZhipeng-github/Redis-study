@@ -33,13 +33,13 @@ Redis基于Reactor模式开发了自己的网络事件处理器：这个处理�
 
 文件事件处理器的四个组成部分，它们分别是**套接字**、**I/O多路复用程序**、**文件事件分派器（dispatcher）**，以及**事件处理器**。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105132923.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105132923.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 前面提到，文件事件是对套接字操作的抽象，**当一个套接字准备好后，就会产生一个文件事件。**
 
 尽管多个文件事件可能会并发地出现，但I/O多路复用程序总是会**将所有产生事件的套接字都放到一个队列里面**，然后通过这个队列，以**有序（sequentially）**、**同步（synchronously）**、**每次一个套接字**的方式向文件事件分派器传送套接字。**只有当上一个套接字处理完毕后，复用程序才会向分派器传送下一个套接字。**
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105133514.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105133514.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 1.2 IO多路复用程序的实现
 
@@ -49,7 +49,7 @@ Redis的I/O多路复用程序的所有功能都是**通过包装常见的select�
 
 由于IO复用程序提供了统一的接口，所以**底层实现方法可以互换。**
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105133854.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105133854.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 1.3 事件类型
 
@@ -70,7 +70,7 @@ I/O多路复用程序可以**同时**监听多个套接字的`ae.h/AE_READABLE`�
 
 当Redis服务器进行**初始化**的时候，程序会将**连接应答处理器**和**服务器监听套接字的`AE_READABLE`事件**关联起来，当有客户端用`sys/socket.h/connec`t函数连接服务器监听套接字的时候，**套接字就会产生`AE_READABLE`事件，引发连接应答处理器执行**。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105143306.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105143306.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（2）命令请求处理器**
 
@@ -78,7 +78,7 @@ I/O多路复用程序可以**同时**监听多个套接字的`ae.h/AE_READABLE`�
 
 和上面一样，当客户端**通过连接应答处理器成功连接到服务器后**，服务器会将**客户端套接字的AE_READABLE事件**和**命令请求处理器**关联起来，当客户端向服务器发送命令请求的时候，**套接字就会产生AE_READABLE事件**，**引发命令请求处理器执行**。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105143323.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105143323.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（3）命令回复处理器**
 
@@ -86,7 +86,7 @@ I/O多路复用程序可以**同时**监听多个套接字的`ae.h/AE_READABLE`�
 
 当服务器有命令回复需要传送给客户端的时候，服务器会将**客户端套接字的AE_WRITABLE事件**和**命令回复处理器**关联起来，当客户端准备好接收服务器传回的命令回复时，就会**产生AE_WRITABLE事件，引发命令回复处理器执行**。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105143336.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105143336.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 2. 时间事件
 
@@ -107,7 +107,7 @@ Redis时间事件分为两类：
 
 因为新的事件总是放在表头，所以三个时间事件分别按逆序ID排列：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105150113.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105150113.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 注意，我们说保存时间事件的链表为无序链表，指的不是链表不按ID排序，而是说，**该链表不按when属性的大小排序**。
 
@@ -140,7 +140,7 @@ Redis时间事件分为两类：
 
 因为服务器中同时存在文件事件和时间事件两种事件类型，所以服务器必须对这两种事件进行调度，**决定何时应该处理什么文件，以及花多少时间来处理它们等等。**事件的调度和执行由`ae.c/aeProcessEvents`函数负责。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105152029.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105152029.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
 
 对事件处理的原则是：
 
@@ -148,4 +148,4 @@ Redis时间事件分为两类：
 - 对两种事件处理都是**同步、有序、原子**地执行的，服务器**不会中途中断事件处理，也不会对事件进行抢占**，因此需要尽可能地减少程序的阻塞时间，并在有需要时主动让出执行权。（比如写入字节太长，命令回复处理器就会break跳出，将余下的数据留到下次）
 - 由于不能抢占，时间事件到达后需要等待文件事件处理完成，所以**一般会稍晚于到达时间。**这就是说即使时间到了，由于不能抢占事件，所以最后时间时间会超时进行。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200105152515.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105152515.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">

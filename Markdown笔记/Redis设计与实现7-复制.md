@@ -154,7 +154,7 @@ PSYNC命令的调用方法有两种：
 
 本节主要展示新版复制操作的全过程，假设主服务器IP地址为127.0.0.1端口号为6379，从服务器IP为127.0.0.1端口号12345.
 
-**（1）设置主服务器地址和端口**
+**（1）步骤一：设置主服务器地址和端口**
 
 当**客户端**向**从服务器**发送以下命令时：
 
@@ -176,7 +176,7 @@ struct redisServer{
 
 <img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110112744.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-**（2）建立套接字连接**
+**（2）步骤二：建立套接字连接**
 
 **从服务器**将根据命令所设置的IP地址和端口，创建**连向主服务器的**套接字连接
 
@@ -184,7 +184,7 @@ struct redisServer{
 
 此时，**从服务器变为了主服务器的客户端。**从服务器**同时具备**服务器和客户端的两个身份。
 
-**（3）发送PING命令**
+**（3）步骤三：发送PING命令**
 
 连接成功后，从服务器立马发送一个PING命令，主要作用是：
 
@@ -199,13 +199,13 @@ struct redisServer{
 
 <img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110114257.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-**（4）身份验证**
+**（4）步骤四：身份验证**
 
 收到pong的回复后，下一步是确定是否进行身份验证：如果从服务器设置了masterauth选项，那么进行身份验证；反之则不进行。
 
 <img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110114522.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-**（5）发送端口信息**
+**（5）步骤五：发送端口信息**
 
 从服务器向主服务器发送从服务器的监听端口号。主服务器在接收到这个命令之后，会将端口号记录在从服务器所对应的客户端状态的`slave_listening_port`属性中：
 
@@ -219,13 +219,13 @@ typedef struct redisClient
 } redisClient;
 ```
 
-**（6）同步**
+**（6）步骤六：同步**
 
 在这一步，从服务器将向主服务器发送PSYNC命令，执行同步操作，并将自己的数据库更新至主服务器数据库当前所处的状态。
 
 在同步操作执行之前，只有从服务器是主服务器的客户端，但是**在执行同步操作之后，主服务器也会成为从服务器的客户端**。
 
-**（7）命令传播**
+**（7）步骤七：命令传播**
 
 主服务器只要一直将自己执行的写命令发送给从服务器，而从服务器只要一直接收并执行主服务器发来的写命令，就可以保证主从服务器一直保持一致了。
 

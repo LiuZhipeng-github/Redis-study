@@ -266,6 +266,7 @@ Lua脚本会一直存在于服务器生命周期，只有服务器被关闭时�
 3. 调用命令执行器
 
 **（3）命令执行器**
+- 查找命令实现
 
 前面提到过，命令执行器会在命令表中查找命令，并将找到的结果保存在客户端状态cmd中。
 
@@ -277,14 +278,20 @@ Lua脚本会一直存在于服务器生命周期，只有服务器被关闭时�
 
 <img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107103852.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-比如set执行时，就会：
+比如set和get执行时，就会：
 
 <img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107104058.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
+在命令表中查找到对应命令后，设置客户端状态的cmd指针。
+
+加图14-5！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+
 ---
 
-现在已经成功完成了：连接所需函数，参数，参数个数。但在真正执行之前还需要进行检查：
+- 执行预备操作
 
+现在已经成功完成了：连接所需函数，参数，参数个数。但在真正执行之前还需要进行检查：
+```
 - 检查客户端状态cmd是否指向NULL
 - 根据redisCommand结构的arity属性，检查参数个数是否正确
 - 检查身份验证
@@ -293,9 +300,10 @@ Lua脚本会一直存在于服务器生命周期，只有服务器被关闭时�
 - 服务器因Lua脚本超时并阻塞，服务器只会执行关闭命令，其他会被拒绝。
 - 如果客户端正在执行事务，则服务器只会执行客户端发来的EXEC、DISCARD、MULTI、WATCH四个命令，其他命令都会被放进事务队列中。
 - 如果打开了监视器功能，服务器会把将要执行的命令发送给监视器。
-
+```
 ---
 
+- 调用命令的实现函数
 在执行命令时，先找到客户端状态指针client，然后找到命令字典cmd，然后查找命令的函数指针proc
 
 ```C
@@ -304,9 +312,11 @@ client->cmd->proc(client);
 
 <img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107105613.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-处理完毕后，产生回复，**保存在输出缓冲区里面**，之后实现函数还会为客户端的套接字**关联命令回复处理器**，这个处理器负责将命令回复返回给客户端。
-
 <img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107105749.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+
+- 执行后续工作
+
+处理完毕后，产生回复，**保存在输出缓冲区里面**，之后实现函数还会为客户端的套接字**关联命令回复处理器**，这个处理器负责将命令回复返回给客户端。
 
 ## 2.2 severCron函数
 

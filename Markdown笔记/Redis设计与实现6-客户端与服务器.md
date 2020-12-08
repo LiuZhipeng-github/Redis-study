@@ -337,7 +337,7 @@ struct redisServer
 };
 ```
 
-因为serverCron函数默认会以每100毫秒一次的频率更新unixtime属性和mstime属性，所以**这两个属性记录的时间的精确度并不高**。
+因为serverCron函数默认会以每100毫秒一次的频率更新unixtime属性和mstime属性，所以**这两个属性记录的时间的精确度并不高**。因为会有100ms的误差
 
 **（2）更新LRU时钟**
 

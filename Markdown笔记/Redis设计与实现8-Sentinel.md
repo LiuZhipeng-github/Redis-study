@@ -23,6 +23,10 @@ Sentinel（哨岗、哨兵）是Redis的高可用性（high avail-ability）解�
 
 # 1. 启动与初始化
 
+```
+Sentinel会读入用户指定的配置文件，为每个要被监视的主服务器创建相应的实例结构，并创建连向主服务器的的命令连接和订阅连接，其中命令连接用于向主服务器发送命令请求，而订阅连接则用于接收指定频道的消息。
+```
+
 启动命令：
 
 ```
@@ -88,6 +92,8 @@ Sentinel状态中的masters字典记录了所有被Sentinel监视的主服务器
 每个`sentinelRedisInstance`结构（后面简称“实例结构”）**代表一个被Sentinel监视的Redis服务器实例（instance）**，这个实例可以是主服务器、从服务器，或者另外一个Sentinel。
 
 对Sentinel状态的初始化将引发对masters字典的初始化，而masters字典的初始化是根据被载入的Sentinel配置文件来进行的。
+
+加图16-6、16-7！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
 
 **（5）创建连向主服务器的网络连接**
 
@@ -202,7 +208,7 @@ Sentinel可以通过分析接收到的频道信息来获知其他Sentinel的存�
 
 <img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111102611.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-注意：Sentinel之间**只会创建命令连接，但不会创建订阅**。Sentinel需要通过接收主服务器或者从服务器发来的频道信息来发现未知的新Sentinel，所以才需要建立订阅连接。相互已知的Sentinel只要使用命令连接来进行通信就足够了。
+**注意**：Sentinel之间**只会创建命令连接，但不会创建订阅**。Sentinel需要通过接收主服务器或者从服务器发来的频道信息来发现未知的新Sentinel，所以才需要建立订阅连接。相互已知的Sentinel只要使用命令连接来进行通信就足够了。
 
 # 4. 检测下线状态
 

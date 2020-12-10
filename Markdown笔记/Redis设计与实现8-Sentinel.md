@@ -74,7 +74,7 @@ Sentinel**本质上只是一个运行在特殊模式下的Redis服务器**，所
 
 ---
 
-普通Redis服务器使用`redis.c/redisCom-mandTable`作为服务器的命令表。而Sentinel则使用`sentinel.c/sentinelcmds`作为服务器的命令表。
+普通Redis服务器使用`redis.c/redisCom-mandTable`作为服务器的命令表。而Sentinel则使用`sentinel.c/sentinelcmds`作为服务器的命令表，**所以Sentinel模式能够使用的命令和普通Redis能够使用的命令不同。**
 
 `sentinelcmds`命令表也解释了为什么在Sentinel模式下，Redis服务器不能执行诸如SET、DBSIZE、EVAL等等这些命令，因为服务器**根本没有在命令表中载入这些命令**。PING、SEN-TINEL、INFO、SUBSCRIBE、UNSUBSCRIBE、PSUBSCRIBE和PUNSUBSCRIBE这七个命令就是客户端可以对Sentinel执行的全部命令了。
 

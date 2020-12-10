@@ -23,15 +23,15 @@ SUBSCRIBE "news.it"
 
 那么这三个客户端都成了"news.it"频道的订阅者，
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107125818.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B010-%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85.assets/20200107125818.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 向"news.it"频道发送消息"hello"，那么"news.it"的三个订阅者都将收到这条消息。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107125901.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B010-%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85.assets/20200107125901.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 除了订阅频道之外，客户端还可以通过执行**PSUBSCRIBE**命令订阅一个或多个**模式**，从而成为这些模式的订阅者：每当有其他客户端向某个频道发送消息时，消息不仅会被发送给这个频道的所有订阅者，**它还会被发送给所有与这个频道相匹配的模式的订阅者。**
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107125956.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B010-%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85.assets/20200107125956.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 1. 订阅与退订
 
@@ -41,7 +41,7 @@ Redis将所有频道的订阅关系都保存在服务器状态的`pubsub_channel
 
 看下图，不同客户端订阅了不同频道：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107130819.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B010-%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85.assets/20200107130819.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -58,7 +58,7 @@ SUBSCRIBE "news.sport" "news.movie"
 - 将10086添加到sport链表后面
 - 新增一个键"news.movie"
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107131546.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B010-%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85.assets/20200107131546.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -86,7 +86,7 @@ typedef struct pubsub_Pattern
 - 客户端8正在订阅模式"book.*"
 - 客户端9正在订阅模式"news.*"
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107132321.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B010-%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85.assets/20200107132321.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -95,7 +95,7 @@ typedef struct pubsub_Pattern
 1. 新建一个`pubsubPattern`结构，将结构的`pattern`属性设置为被订阅的模式，`client`属性设置为订阅模式的客户端。
 2. 将`pubsubPattern`结构添加到`pubsub_patterns`链表的表尾。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107132636.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B010-%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85.assets/20200107132636.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 退订时，在`pubsub_patterns`链表中查找并删除。
 
@@ -147,3 +147,6 @@ redis> PUBSUB CHANNELS "news.[is]*"
 
 通过返回`pubsub_patterns`链表的长度来实现的。注意一下频道数量的查找逻辑是：**频道字典->频道订阅者链表->数量**；而模式数量的查找逻辑是：**模式链表->数量**。
 
+
+
+![4B9A94F4-D619-42E6-B80D-568A93F6A5DB_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B010-%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85.assets/4B9A94F4-D619-42E6-B80D-568A93F6A5DB_1_105_c.jpeg)

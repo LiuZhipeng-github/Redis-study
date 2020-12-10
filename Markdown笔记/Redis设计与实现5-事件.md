@@ -149,3 +149,5 @@ Redis时间事件分为两类：
 - 由于不能抢占，时间事件到达后需要等待文件事件处理完成，所以**一般会稍晚于到达时间。**这就是说即使时间到了，由于不能抢占事件，所以最后时间时间会超时进行。
 
 <img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/20200105152515.png"  style="zoom:67%;display: block; margin: 0px auto; vertical-align: middle;">
+
+![A49E13C8-AB0E-4CB6-A8CF-54462A8ABD33_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B05-%E4%BA%8B%E4%BB%B6.assets/A49E13C8-AB0E-4CB6-A8CF-54462A8ABD33_1_105_c.jpeg)

@@ -19,7 +19,7 @@ Sentinel（哨岗、哨兵）是Redis的高可用性（high avail-ability）解�
 2. 某个节点出问题时，**通知给其他进程**（比如他的客户端）。
 3. 主服务器下线时，在从服务器中**选举**出一个新的主服务器。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110134840.png"   style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200110134840.png"   style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 1. 启动与初始化
 
@@ -93,7 +93,9 @@ Sentinel状态中的masters字典记录了所有被Sentinel监视的主服务器
 
 对Sentinel状态的初始化将引发对masters字典的初始化，而masters字典的初始化是根据被载入的Sentinel配置文件来进行的。
 
-加图16-6、16-7！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+![123116E0-0083-49C3-9668-E76AB4C08D3E_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/123116E0-0083-49C3-9668-E76AB4C08D3E_1_105_c.jpeg)
+
+![9F392E9E-C6A2-48A4-A20D-87803AD15D6C_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/9F392E9E-C6A2-48A4-A20D-87803AD15D6C_1_105_c.jpeg)
 
 **（5）创建连向主服务器的网络连接**
 
@@ -112,7 +114,7 @@ Redis目前的发布与订阅功能中，被发送的信息都不会保存在Red
 
 Sentinel默认会以每十秒一次的频率，通过命令连接向被监视的**主服务器发送INFO命令**，并通过分析INFO命令的回复来获取主服务器的当前信息。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110145047.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200110145047.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 会收到类似以下内容的回复：
 
@@ -135,13 +137,13 @@ slave2:ip=127.0.0.1,port=33333,state=online,offset=43,lag=0
 - 根据run_id域和role域记录的信息，**更新Sentinel主服务器的实例结构**。
 - 返回的从服务器信息，则会被用于**更新主服务器实例结构的slaves字典**，这个字典记录了主服务器属下从服务器的名单。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110145919.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200110145919.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 2.2 获取从服务器信息
 
 当Sentinel发现主服务器有新的从服务器出现时，Sentinel除了会为这个新的从服务器创建相应的实例结构之外，Sentinel还会创建连接到从服务器的命令连接和订阅连接。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110150543.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200110150543.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 在创建命令连接之后，Sentinel在默认情况下，会以每十秒一次的频率通过命令连接向**从服务器发送INFO命令**，并获得类似于以下内容的回复：
 
@@ -164,7 +166,7 @@ Other sections
 
 利用这些信息更新从服务器的实例结构：
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110150925.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200110150925.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 2.3 接收主从服务器的频道
 
@@ -178,11 +180,11 @@ Sentinel对`__sentinel__:hello`频道的订阅会一直持续到Sentinel与服�
 
 对于每个与Sentinel连接的服务器，Sentinel既通过命令连接向服务器的`__sentinel__:hello`频道发送信息，又通过订阅连接从服务器的`__sentinel__:hello`频道接收信息
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110151759.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200110151759.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 假设现在有sentinel1、sentinel2、sentinel3三个Sentinel在监视同一个服务器，那么当sentinel1向服务器的`__sentinel__:hello`频道发送一条信息时，所有订阅了`__sen-tinel__:hello`频道的Sentinel都会收到这条信息。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200110152455.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200110152455.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 3. Sentinel互相监督
 
@@ -239,7 +241,7 @@ Sentinel会以每秒一次的频率向所有与它创建了命令连接的实例
   - **领头Sentinel：**如果有某个Sentinel**被半数**以上的Sentinel设置成了局部领头Sentinel，那么这个Sentinel成为领头Sentinel。
 - **重选条件：**如果没有过半，则再次投票，知道选出过半的为止。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111105242.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200111105242.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 5.1 故障转移
 
@@ -268,3 +270,7 @@ Sentinel会以每秒一次的频率向所有与它创建了命令连接的实例
 <img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111111539.png"  style="zoom:55%;display: block; margin: 0px auto; vertical-align: middle;">
 
 <img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111111552.png"  style="zoom:55%;display: block; margin: 0px auto; vertical-align: middle;">
+
+
+
+![EE6C9843-9D51-44B8-9FE7-71A2C0F95341_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/EE6C9843-9D51-44B8-9FE7-71A2C0F95341_1_105_c.jpeg)

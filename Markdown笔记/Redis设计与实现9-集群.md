@@ -12,7 +12,7 @@ date: 2020-01-06 18:17:06
 
 ---
 
-Redis集群是Redis提供的分布式数据库方案，集群通过分片（sharding）来进行数据共享，并提供复制和故障转移功能。<!--more-->
+Redis集群是Redis提供的分布式数据库方案，集群通过分片（sharding）来进行数据共享，并提供复制和故障转移功能。
 
 # 1. 节点
 
@@ -180,7 +180,7 @@ typedef struct clusterState
 - 如果想知道某个槽是否被指派以及被指派给了谁，需要遍历所有clusterNode结构。
 - 通过`clusterState`保存的数组，可以以$O(1)$的时间取得结果。
 
-加图17-14！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+![3A7D62F5-06CF-4691-82C7-0C9F30856562_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/3A7D62F5-06CF-4691-82C7-0C9F30856562_1_105_c.jpeg)
 
 ## 2.4 槽的保存方式
 
@@ -391,13 +391,11 @@ ASK错误和MOVED错误的区别：
 和主从服务器的关系非常相似，不过**在集群模式下服务器被替换为节点。**Redis集群中的节点分为主节点（master）和从节点（slave），其中主节点用于处理槽，而从节点则用于复制某个主节点，并在被复制的主节点下线时，代替下线主节点继续处理命令请求。
 
 例如：
-加图17-32！！！！！！！！！！！！！！！！！！！！！！！！！！！
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/4D870ED8-12D9-4839-A91B-C74495971F8A_1_201_a.jpeg" alt="4D870ED8-12D9-4839-A91B-C74495971F8A_1_201_a" style="zoom:50%;" />
 7000节点要下线（7004与7005是7000从节点，并假定7004被选中为新的主节点）
-加表17-34！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+![662D5F9F-6883-498B-A47E-68D7D7F7D040_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/662D5F9F-6883-498B-A47E-68D7D7F7D040_1_105_c.jpeg)
 重新上线的7000节点成为7004的从节点
-加表17-3！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-
-## 6.1 设置从节点
+![086B1E1C-E83C-49B5-A1FB-C50C98857CC6_1_201_a](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/086B1E1C-E83C-49B5-A1FB-C50C98857CC6_1_201_a.jpeg)6.1 设置从节点
 
 向一个节点发送命令：
 
@@ -616,3 +614,5 @@ PUBLISH <channel> <message>
 也就是说，向集群发送`PUBLISH <channel> <message>`，会导致集群所有节点都向channel发送message消息。
 
 <img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112133931.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+
+![A89E3A53-784A-49B2-AEFC-C3CAADE998A7_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/A89E3A53-784A-49B2-AEFC-C3CAADE998A7_1_105_c.jpeg)

@@ -45,7 +45,7 @@ redis->EXEC
 - 如果客户端发送EXEC，DISCARD，WATCH，MULTI这四个命令，则立即执行。
 - 如果发送的是其他命令，则放到事务队列里面，向客户端返回QUEUED回复。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107143029.png"  style="zoom:66%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B011-%E4%BA%8B%E5%8A%A1.assets/20200107143029.png"  style="zoom:66%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（2）命令入队**
 
@@ -88,7 +88,7 @@ typedef struct multiCmd
 
 事务结构具体的包含逻辑是：**客户端->事务状态multiState->事务队列multiCmd->具体命令cmd**
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107145421.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B011-%E4%BA%8B%E5%8A%A1.assets/20200107145421.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（3）执行事务**
 
@@ -143,7 +143,7 @@ typedef struct redisDb
 
 下图说明：c1和c2客户端正在监视键"name"，c3客户端正在监视"age"....
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200107152901.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B011-%E4%BA%8B%E5%8A%A1.assets/20200107152901.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 2.2 监视触发
 
@@ -200,3 +200,5 @@ Redis事务只是简答包裹了一组Redis命令，耐久性由持久化实现�
 ---
 
 总的来说，Redis事务**一定**具有原子性，一致性和隔离性，但**只有在特定条件**下才具有耐久性。
+
+![86FA0243-4B7D-4BEA-BFE2-62D449AF8662_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B011-%E4%BA%8B%E5%8A%A1.assets/86FA0243-4B7D-4BEA-BFE2-62D449AF8662_1_105_c.jpeg)

@@ -332,3 +332,5 @@ void saddCommand(redisClient* c)
 1. 检查服务器是否允许发送此类通知，如果不允许就返回
 2. 是否允许发送**键空间通知**（4.1提到的情况1），允许就发送
 3. 是否允许发送**键事件通知**（4.2提到的情况2），允许就发送
+
+![4CDA6DC3-456B-4E06-991A-1C1B44F1DB1F_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B03-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.assets/4CDA6DC3-456B-4E06-991A-1C1B44F1DB1F_1_105_c.jpeg)

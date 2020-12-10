@@ -486,3 +486,5 @@ serverCron函数每次执行都会调用databasesCron函数，这个函数会对
 ```
 
 开始执行事件循环，意味着服务器现在开始可以接受客户端的连接请求了。
+
+![CCC0057C-F62E-4414-B451-4814ACB7E28F_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B06-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/CCC0057C-F62E-4414-B451-4814ACB7E28F_1_105_c.jpeg)

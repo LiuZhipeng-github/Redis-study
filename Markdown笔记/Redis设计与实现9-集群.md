@@ -113,7 +113,7 @@ typedef struct clusterLink {
 4. B向A返回一条PONG消息
 5. A收到PONG后向B返回一条PING
 6. B收到PING后，握手完成。
-
+之后，节点A会将节点B的信息通过Gossip协议传播给集群中的其他节点，让其他节点也与B节点握手，最后节点B会被集群中所有节点认识。
 <img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111114635.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 2. 槽指派
@@ -145,6 +145,7 @@ struct clusterNode
 <img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111123632.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 因为数组自带索引，所以取出某个槽是否使用的时间复杂的为$O(1)$。
+
 
 ## 2.2 传播节点的槽指派信息
 
@@ -179,6 +180,8 @@ typedef struct clusterState
 - 如果想知道某个槽是否被指派以及被指派给了谁，需要遍历所有clusterNode结构。
 - 通过`clusterState`保存的数组，可以以$O(1)$的时间取得结果。
 
+加图17-14！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+
 ## 2.4 槽的保存方式
 
 节点还会用`clusterState`结构中的`slots_to_keys`**跳跃表**来保存槽和键之间的关系:
@@ -196,7 +199,9 @@ typedef struct clusterState
 
 <img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112104732.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-# 3. MOVED错误
+**注意**：clusterNode.slots数组记录了集群中所有槽的指派信息，而clusterNode.slots数组只记录了clusterNode结构所代表的节点的槽指派信息，这是两个slots数组的关键区别所在。
+
+# 3. 在集群中执行命令
 
 前面提到，指派完槽以后，集群会进入上线状态，此时客户端可以向集群中的节点发送数据命令。
 
@@ -384,6 +389,13 @@ ASK错误和MOVED错误的区别：
 # 6. 节点的复制与故障转移
 
 和主从服务器的关系非常相似，不过**在集群模式下服务器被替换为节点。**Redis集群中的节点分为主节点（master）和从节点（slave），其中主节点用于处理槽，而从节点则用于复制某个主节点，并在被复制的主节点下线时，代替下线主节点继续处理命令请求。
+
+例如：
+加图17-32！！！！！！！！！！！！！！！！！！！！！！！！！！！
+7000节点要下线（7004与7005是7000从节点，并假定7004被选中为新的主节点）
+加表17-34！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+重新上线的7000节点成为7004的从节点
+加表17-3！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
 
 ## 6.1 设置从节点
 

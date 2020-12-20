@@ -129,7 +129,7 @@ redis> EVAL "redis = 10086; return redis" 0
 
 最后的这一步，服务器会将Lua环境和服务器状态的lua属性关联起来
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200108150354.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B012-Lua%E8%84%9A%E6%9C%AC.assets/20200108150354.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 2. Lua环境协作组件
 
@@ -144,7 +144,7 @@ redis> EVAL "redis = 10086; return redis" 0
 5. Lua环境在接收到命令结果之后，将该结果返回给`redis.call`函数或者`redis.pcall`函数。
 6. 接收到结果的`redis.call`函数或者`redis.pcall`函数会将命令结果作为函数返回值返回给脚本中的调用者。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200108150944.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B012-Lua%E8%84%9A%E6%9C%AC.assets/20200108150944.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 2.2 lua_script字典
 
@@ -174,7 +174,7 @@ redis> SCRIPT LOAD "return 2*2"
 "4475bfb5919b5ad16424cb50f74d4724ae833e72"
 ```
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200108151150.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B012-Lua%E8%84%9A%E6%9C%AC.assets/20200108151150.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 3. Lua相关命令的实现
 
@@ -228,7 +228,7 @@ end
 
 首先服务器向lua_stripts字典中添加一个键值对，键为Lua脚本的SHA1校验和，值为Lua脚本本身（一个字符串）
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200108151935.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B012-Lua%E8%84%9A%E6%9C%AC.assets/20200108151935.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（3）执行脚本函数**
 
@@ -245,7 +245,7 @@ end
 
 只要脚本对应的函数曾经在Lua环境里面定义过，那么**即使不知道脚本的内容本身，客户端也可以根据脚本的SHA1校验和来调用脚本对应的函数**，从而达到执行脚本的目的，这就是EVALSHA命令的实现原理。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200108154429.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B012-Lua%E8%84%9A%E6%9C%AC.assets/20200108154429.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 举个例子，当服务器执行完以下EVAL命令之后：
 
@@ -295,4 +295,4 @@ redis> EVALSHA "2f31ba2bb6d6a0f42cc159d2e2dad55440778de3" 0
 
 一旦钩子发现脚本的运行时间已经超过了lua-time-limit选项设置的时长，**钩子将定期在脚本运行的间隙中，查看是否有SCRIPT KILL命令或者SHUTDOWN命令到达服务器。**达到类似于**中断**的效果。
 
-<img src="https://bucket-1259555870.cos.ap-chengdu.myqcloud.com/20200108160142.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B012-Lua%E8%84%9A%E6%9C%AC.assets/20200108160142.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">

@@ -208,7 +208,7 @@ Sentinel可以通过分析接收到的频道信息来获知其他Sentinel的存�
 
 当Sentinel通过频道信息发现一个新的Sentinel时，它不仅会为新Sentinel在sentinels字典中创建相应的实例结构**，还会创建一个连向新Sentinel的命令连接**，而**新Sentinel也同样会创建连向这个Sentinel的命令连接**，最终监视同一主服务器的多个Sentinel将形成相互连接的**环形网络**。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111102611.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200111102611.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **注意**：Sentinel之间**只会创建命令连接，但不会创建订阅**。Sentinel需要通过接收主服务器或者从服务器发来的频道信息来发现未知的新Sentinel，所以才需要建立订阅连接。相互已知的Sentinel只要使用命令连接来进行通信就足够了。
 
@@ -218,7 +218,7 @@ Sentinel可以通过分析接收到的频道信息来获知其他Sentinel的存�
 
 Sentinel会以每秒一次的频率向所有与它创建了命令连接的实例（包括**主服务器、从服务器、其他Sentinel在内**）发送PING命令，并通过实例返回的PING命令回复来**判断对方是否在线。**
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111103051.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200111103051.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 当对方超过一段时间不向Sentinel回复时（比如超时5000毫秒）则Sentinel1就会**将对方标记为主观下线**。
 
@@ -261,15 +261,15 @@ Sentinel会以每秒一次的频率向所有与它创建了命令连接的实例
 
 之后需要让已下线主服务器属下的所有从服务器去复制新的主服务器，这一动作可以通过向从服务器发送SLAVEOF命令来实现。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111110306.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200111110306.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（3）将旧的主服务器变为从服务器**
 
 当原来的主服务器重新上线时，Sentinel就会向它发送SLAVEOF命令，让它成为新主服务器的从服务器。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111111539.png"  style="zoom:55%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200111111539.png"  style="zoom:55%;display: block; margin: 0px auto; vertical-align: middle;">
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111111552.png"  style="zoom:55%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B08-Sentinel.assets/20200111111552.png"  style="zoom:55%;display: block; margin: 0px auto; vertical-align: middle;">
 
 
 

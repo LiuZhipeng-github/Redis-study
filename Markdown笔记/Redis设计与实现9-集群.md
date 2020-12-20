@@ -28,13 +28,13 @@ CLUSTER MEET <ip> <port>
 
 当前节点发送`CLUSTER MEET`命令，可以与**ip和port所指定的节点进行握手（handshake）**，当握手成功时，node节点就会将ip和port所指定的节点添加到node节点当前所在的集群中。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111112438.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200111112438.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 1.2 启动节点
 
 **一个节点就是一个运行在集群模式下的Redis服务器**，Redis服务器在启动时会根据`cluster-enabled`配置选项是否为yes来决定是否开启服务器的集群模式:
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111112558.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200111112558.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 1.3 集群数据结构
 
@@ -95,7 +95,7 @@ typedef struct clusterLink {
 
 假设现在有三个独立的节点127.0.0.1:7000、127.0.0.1:7001、127.0.0.1:7002，将他们创立为集群后，数据结构如下：
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111113941.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200111113941.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 总的来说：
 
@@ -114,7 +114,7 @@ typedef struct clusterLink {
 5. A收到PONG后向B返回一条PING
 6. B收到PING后，握手完成。
 之后，节点A会将节点B的信息通过Gossip协议传播给集群中的其他节点，让其他节点也与B节点握手，最后节点B会被集群中所有节点认识。
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111114635.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200111114635.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 2. 槽指派
 
@@ -142,7 +142,7 @@ struct clusterNode
 
 下图表示这个节点负责处理槽0至7，
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200111123632.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200111123632.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 因为数组自带索引，所以取出某个槽是否使用的时间复杂的为$O(1)$。
 
@@ -197,7 +197,7 @@ typedef struct clusterState
 
 `slots_to_keys`跳跃表每个节点的分值（score）都是一个槽号，而每个节点的成员（member）都是一个数据库键：
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112104732.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112104732.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **注意**：clusterNode.slots数组记录了集群中所有槽的指派信息，而clusterNode.slots数组只记录了clusterNode结构所代表的节点的槽指派信息，这是两个slots数组的关键区别所在。
 
@@ -210,7 +210,7 @@ typedef struct clusterState
 - 如果指派给自己，执行
 - 否则，返回MOVED错误，并**将客户端指向正确的节点**。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112100142.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112100142.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 比如，date键所在的槽正好是节点7000负责，正常执行。
 
@@ -250,7 +250,7 @@ slot_number = CRC16(key)&16383
 - 如果`clusterState.slots[i]`等于`clusterState.myself`，那么说明槽i由当前节点负责，节点可以执行客户端发送的命令。
 - 反之，则记下指向clusterNode结构所记录的IP和端口号
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112102348.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112102348.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ## 3.2 MOVED错误实现
 
@@ -270,9 +270,9 @@ MOVED <slot> <ip>:<port>
 OK
 ```
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112103121.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112103121.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112103137.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112103137.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 4. 重新分片
 
@@ -284,11 +284,11 @@ Redis集群的重新分片操作是由Redis的集群管理软件**redis-trib**�
 
 重新分配步骤如下：
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112105535.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112105535.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 如果重新分片涉及多个槽，那么redis-trib将对每个给定的槽分别执行上面给出的步骤。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112105711.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112105711.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 # 5. ASK错误
 
@@ -332,7 +332,7 @@ CLUSTER SETSLOT <i> IMPORTING <source_id>
 9dfb4c4e016e627d9769e4c9bb0d4fa208e65c26OK
 ```
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112111238.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112111238.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 **（2）CLUSTER SETSLOT MIGRATING命令的实现**
 
@@ -365,17 +365,17 @@ CLUSTER SETSLOT <i> MIGRATING <target_id>
 ASK 16198 127.0.0.1:7003
 ```
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112112014.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112112014.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 接到ASK错误的客户端会根据错误提供的IP地址和端口号，**转向至正在导入槽的目标节点，然后首先向目标节点发送一个ASKING命令**，之后再重新发送原本想要执行的命令。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112111957.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112111957.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
 ASKING命令的目的就是打开REDIS_ASKING标识，而且**是一次性的打开**，意味着使用完后会被关闭。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112112220.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112112220.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ---
 
@@ -426,7 +426,7 @@ struct clusterNode
 
 根据`clusterState.my-self.slaveof`指向的clusterNode结构所保存的IP地址和端口号，对主节点进行复制。因为**节点的复制功能和单机Redis服务器的复制功能使用了相同的代码**，所以让从节点复制主节点相当于向从节点发送命令SLAVEOF。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112113144.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112113144.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 一个节点成为从节点，并开始复制某个主节点这一信息**会通过消息发送给集群中的其他节点，最终集群中的所有节点都会知道某个从节点正在复制某个主节点。**
 
@@ -613,6 +613,6 @@ PUBLISH <channel> <message>
 
 也就是说，向集群发送`PUBLISH <channel> <message>`，会导致集群所有节点都向channel发送message消息。
 
-<img src="https://uk-1259555870.cos.eu-frankfurt.myqcloud.com/20200112133931.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
+<img src="Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/20200112133931.png"  style="zoom:75%;display: block; margin: 0px auto; vertical-align: middle;">
 
 ![A89E3A53-784A-49B2-AEFC-C3CAADE998A7_1_105_c](Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B09-%E9%9B%86%E7%BE%A4.assets/A89E3A53-784A-49B2-AEFC-C3CAADE998A7_1_105_c.jpeg)
